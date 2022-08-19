@@ -1,6 +1,6 @@
 import styles from './ItemList.module.css';
 import { Divider, Grid, Header } from 'semantic-ui-react';
-import { Item } from '@/interfaces';
+import { Item } from '@/src/interfaces';
 import Link from 'next/link';
 import { NextPage } from 'next';
 

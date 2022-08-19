@@ -1,10 +1,10 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
-import { ITEMS_API_URL } from '../constants';
+import { ITEMS_API_URL } from '../src/constants';
 import { useEffect, useState } from 'react';
-import { ItemList } from '../components';
-import { Item } from '@/interfaces';
+import { ItemList } from '../src/components';
+import { Item } from '@/src/interfaces';
 import { Loader } from 'semantic-ui-react';
 
 const Home: NextPage = () => {

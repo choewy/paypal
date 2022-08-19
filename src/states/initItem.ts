@@ -1,4 +1,4 @@
-import { Item } from '@/interfaces';
+import { Item } from '@/src/interfaces';
 
 export class InitItem implements Item {
   id = 0;

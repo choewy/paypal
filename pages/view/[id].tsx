@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ITEM_API_URL } from '../../constants';
-import { Item } from '@/interfaces';
+import { ITEM_API_URL } from '../../src/constants';
+import { Item } from '@/src/interfaces';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { ItemDetail } from '../../components';
+import { ItemDetail } from '../../src/components';
 import Head from 'next/head';
 
 interface Props {

@@ -6,6 +6,5 @@ export const ITEMS_API_URL = () => {
 };
 
 export const ITEM_API_URL = (id: string) => {
-  console.log(id);
   return `${apiHost}/${itemPath}/${id}.json`;
 };

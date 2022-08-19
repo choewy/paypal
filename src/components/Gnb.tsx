@@ -11,6 +11,10 @@ const menuItems = [
     name: 'about',
     pathname: '/about',
   },
+  {
+    name: 'contact',
+    pathname: '/contact',
+  },
 ];
 
 export const Gnb = () => {
