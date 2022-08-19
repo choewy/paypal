@@ -1,38 +1,42 @@
 import axios from 'axios';
 import { ITEM_API_URL } from '../../constants';
 import { Item } from '@/interfaces';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { ItemDetail } from '../../components';
-import { InitItem } from '../../states';
+import Head from 'next/head';
 
-const View: NextPage = () => {
-  const router = useRouter();
-  const { id } = router.query;
+interface Props {
+  item: Item;
+}
 
-  const [item, setItem] = useState<Item>(new InitItem());
-
-  const getItem = () => {
-    axios({
-      method: 'get',
-      url: ITEM_API_URL(id as string),
-    }).then((res) => {
-      setItem(res.data);
-    });
-  };
-
-  useEffect(() => {
-    if (id !== undefined) {
-      getItem();
-    }
-  }, [id]);
-
+const View: NextPage<Props> = ({ item }: Props) => {
   return (
-    <div>
-      <ItemDetail item={item} />
-    </div>
+    <>
+      {item && (
+        <>
+          <Head>
+            <title>{item.name}</title>
+            <meta name="description" content={item.description} />
+          </Head>
+          <ItemDetail item={item} />
+        </>
+      )}
+    </>
   );
 };
 
 export default View;
+
+export const getServerSideProps: GetServerSideProps = async (
+  ctx: GetServerSidePropsContext,
+) => {
+  const { id } = ctx.params as { id: string };
+  const res = await axios({ method: 'get', url: ITEM_API_URL(id) });
+  const data = res.data;
+
+  return {
+    props: {
+      item: data,
+    },
+  };
+};

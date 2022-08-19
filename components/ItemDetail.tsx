@@ -12,7 +12,7 @@ export const ItemDetail: NextPage<Props> = ({ item }) => {
     <>
       <div className={styles.item_wrap}>
         <div className={styles.item_img}>
-          <img src={item.image_link} />
+          <img src={item.image_link} alt={item.name} />
         </div>
         <div className={styles.item_info}>
           <strong className={styles.item_name}>{item.name}</strong>
