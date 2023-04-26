@@ -12,7 +12,7 @@ export class Server {
 
   private errorLog(e: any) {
     const error = e.response.data;
-    console.log(e.response.data);
+    console.log(error);
     return error;
   }
 

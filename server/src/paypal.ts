@@ -27,6 +27,79 @@ export class Paypal {
     return data.access_token;
   }
 
+  public async createOrder_v2_0(): Promise<PaymentOrderRto> {
+    const url = 'https://api-m.sandbox.paypal.com/v2/checkout/orders';
+
+    const accessToken = await this.getAccessToken();
+    const paypalRequestID = v4();
+    const headers = new AxiosHeaders();
+    headers.set('Content-Type', 'application/json');
+    headers.set('Authorization', `Bearer ${accessToken}`);
+    headers.set('Paypal-Request-Id', paypalRequestID);
+
+    const body = {
+      intent: 'CAPTURE',
+      purchase_units: [
+        {
+          reference_id: 'receiver-revenue',
+          payee: { email_address: 'choewy@receiver.com' },
+          amount: {
+            currency_code: 'USD',
+            value: '8.00',
+            breakdown: {
+              item_total: {
+                currency_code: 'USD',
+                value: '10.00',
+              },
+              discount: {
+                currency_code: 'USD',
+                value: '2.00',
+              },
+            },
+          },
+        },
+        {
+          reference_id: 'merchant-fee',
+          payee: { email_address: 'choewy@platform.com' },
+          amount: {
+            currency_code: 'USD',
+            value: '2.00',
+            breakdown: {
+              item_total: {
+                currency_code: 'USD',
+                value: '10.00',
+              },
+              discount: {
+                currency_code: 'USD',
+                value: '8.00',
+              },
+            },
+          },
+        },
+      ],
+      payment_source: {
+        paypal: {
+          experience_context: {
+            payment_method_selected: 'PAYPAL',
+            payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
+            brand_name: 'TEST INC',
+            locale: 'en-US',
+            shipping_preference: 'NO_SHIPPING',
+            user_action: 'PAY_NOW',
+            return_url: 'http://localhost:3000/ok',
+            cancel_url: 'http://localhost:3000/cancel',
+          },
+        },
+      },
+    };
+
+    const { data } = await this.axios.post(url, body, { headers });
+
+    await this.orderDB.insert(data.id, paypalRequestID);
+
+    return new PaymentOrderRto(data);
+  }
+
   public async createOrder(): Promise<PaymentOrderRto> {
     const url = 'https://api-m.sandbox.paypal.com/v2/checkout/orders';
 
@@ -41,7 +114,6 @@ export class Paypal {
       intent: 'CAPTURE',
       purchase_units: [
         {
-          payee: { email_address: 'choewy@receiver.com' },
           amount: {
             currency_code: 'USD',
             value: '10.00',
@@ -54,27 +126,27 @@ export class Paypal {
                 currency_code: 'USD',
                 value: '2.00',
               },
-              shipping: {
-                currency_code: 'USD',
-                value: '0.00',
-              },
-              tax_total: {
-                currency_code: 'USD',
-                value: '0.00',
-              },
             },
           },
+          payee: { email_address: 'choewy@receiver.com' },
           payment_instruction: {
             platform_fees: [
               {
+                amount: { currency_code: 'USD', value: '2.00' },
                 payee: { email_address: 'choewy@platform.com' },
-                amount: {
-                  currency_code: 'USD',
-                  value: '2.00',
-                },
               },
             ],
           },
+          items: [
+            {
+              name: 'Donation',
+              quantity: '1',
+              unit_amount: {
+                currency_code: 'USD',
+                value: '8.00',
+              },
+            },
+          ],
         },
       ],
       payment_source: {
