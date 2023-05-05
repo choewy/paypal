@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { CoreModule, PaypalModule } from '@/module';
+import { CoreModule, PaypalModule } from '@/modules';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
