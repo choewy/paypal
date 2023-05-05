@@ -1,11 +1,10 @@
-import { Config } from './config';
-import { OrderDB } from './db';
-import { Paypal } from './paypal';
-import { Server } from './server';
+import { Bootstrap } from '@/bootstrap';
+import { AppModule } from '@/app';
 
-const config = new Config();
-const orderDB = new OrderDB();
-const paypal = new Paypal(config, orderDB);
-const server = new Server(config, paypal);
+const main = async () => {
+  const bootstrap = new Bootstrap();
+  await bootstrap.create(AppModule);
+  await bootstrap.listen();
+};
 
-server.bootstarp();
+main();
